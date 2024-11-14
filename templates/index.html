@@ -10,6 +10,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column; /* Allows footer to align correctly */
             height: 100vh; /* Full screen height */
             margin: 0;
             font-family: Arial, sans-serif;
@@ -24,6 +25,7 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px; /* Adds space above footer */
         }
 
         h1 {
@@ -84,6 +86,21 @@
         .filled {
             color: gold;
         }
+
+        footer {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        footer a {
+            color: #0073e6;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -98,7 +115,7 @@
                 <option value="Total">Total</option>
             </select>
 
-            <label for="lift">Weight Lifted (kg):</label> <!-- Changed label text -->
+            <label for="lift">Weight Lifted (kg):</label>
             <input type="number" name="lift" id="lift" required step="0.1">
 
             <label for="bodyweight">Bodyweight (kg):</label>
@@ -126,5 +143,10 @@
             </div>
         {% endif %}
     </div>
+
+    <footer>
+        These standards are relative to 124,914 male, drug-tested, IPF, raw (without wraps), full power, non-repeated lifters from 
+        <a href="https://www.openpowerlifting.org/" target="_blank">openpowerlifting.org</a>.
+    </footer>
 </body>
 </html>
