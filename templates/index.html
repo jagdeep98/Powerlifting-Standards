@@ -48,7 +48,7 @@
         }
 
         select {
-            width: 100%; /* Ensures dropdown is the same width as the text boxes */
+            width: 95%; /* Ensures dropdown is the same width as the text boxes */
         }
 
         button {
@@ -106,47 +106,55 @@
 <body>
     <div class="container">
         <h1>Powerlifting Standards</h1>
-        <form method="POST">
+        <form method="POST">	
             <label for="lift_type">Select Lift Type:</label>
             <select name="lift_type" id="lift_type">
                 <option value="Squat">Squat</option>
-                <option value="Bench">Bench</option>
+                <option value="Bench">Bench Press</option>
                 <option value="Deadlift">Deadlift</option>
                 <option value="Total">Total</option>
             </select>
-
+			
+            <label for="Sex">Select Sex:</label>
+            <select name="Sex" id="Sex">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="shemale">Shemale</option>
+            </select>
+					
             <label for="lift">Weight Lifted (kg):</label>
-            <input type="number" name="lift" id="lift" required step="0.1">
+            <input type="text" name="lift" id="lift">
 
             <label for="bodyweight">Bodyweight (kg):</label>
-            <input type="number" name="bodyweight" id="bodyweight" required step="0.1">
+            <input type="text" name="bodyweight" id="bodyweight">
 
-            <button type="submit">Calculate</button>
+            <button type="submit">Submit</button>
         </form>
 
         {% if result %}
-            <div class="output">
-                <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
-                <p>Lifting {{ result.lift }}kg at {{ result.bodyweight }}kg bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of lifters.</p>
+        <div class="output">
+            <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
+            <p>Lifting {{ result.lift }}kg at {{ result.bodyweight }}kg bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of lifters.</p>
 
-                <div class="stars">
-                    {% for i in range(5) %}
-                        {% if i < result.stars|int %}
-                            <span class="star filled">★</span> <!-- Full star -->
-                        {% elif i < result.stars %}
-                            <span class="star filled">☆</span> <!-- Half star -->
-                        {% else %}
-                            <span class="star">☆</span> <!-- Empty star -->
-                        {% endif %}
-                    {% endfor %}
-                </div>
+            <div class="stars">
+                {% for i in range(5) %}
+                    {% if i < result.stars|int %}
+                        <span class="star filled">★</span> <!-- Full star -->
+                    {% elif i < result.stars %}
+                        <span class="star filled">☆</span> <!-- Half star -->
+                    {% else %}
+                        <span class="star">☆</span> <!-- Empty star -->
+                    {% endif %}
+                {% endfor %}
             </div>
+        </div>
         {% endif %}
     </div>
 
     <footer>
-        These standards are relative to 124,914 male, drug-tested, IPF, raw (without wraps), full power, non-repeated lifters from 
-        <a href="https://www.openpowerlifting.org/" target="_blank">openpowerlifting.org</a>.
+        These standards are based on data from 172,398 lifters from 
+        <a href="https://www.openpowerlifting.org/" target="_blank">openpowerlifting.org</a>, 
+		specifically those who competed in raw (with sleeves) full power meets, achieved a total, and participated in IPF-affiliated competitions, with no repeat name entries.
     </footer>
 </body>
 </html>
