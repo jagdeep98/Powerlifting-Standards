@@ -5,32 +5,44 @@ import math
 app = Flask(__name__)
 
 # Load the dataset
-df = pd.read_csv('unique_entries_data.csv')
+df = pd.read_csv('processed_openipf_2024_10_26.csv')
 
-# Constants for GL Points formula
-A = 1199.72839
-B = 1025.18162
-C = 0.00921
+# Constants for GL Points formula for males and females
+constants = {
+    "M": {
+        "A": 1199.72839,
+        "B": 1025.18162,
+        "C": 0.00921
+    },
+    "F": {
+        "A": 610.32796,
+        "B": 1045.59282,
+        "C": 0.03048
+    }
+}
 
 # GL Points calculation function
-def calculate_gl_points(lift, bodyweight):
+def calculate_gl_points(lift, bodyweight, Sex):
+    A = constants[Sex]["A"]
+    B = constants[Sex]["B"]
+    C = constants[Sex]["C"]
     return lift * 100 / (A - B * math.exp(-C * bodyweight))
 
 # Function to calculate rank for a selected lift
-def get_percentage_rank(lift, bodyweight, lift_type):
-    gl_points = calculate_gl_points(lift, bodyweight)
+def get_percentage_rank(lift, bodyweight, lift_type, Sex):
+    gl_points = calculate_gl_points(lift, bodyweight, Sex)
     column_mapping = {
-        "Squat": ("GLPT SQ", "GL S % from best"),
-        "Bench": ("GLPT B", "GL B % from best"),
-        "Deadlift": ("GLPT D", "GL D % from best"),
-        "Total": ("GLPT T", "GL T % from best")
+        "Squat": ("SQGL", "GL S % from best"),
+        "Bench": ("BGL", "GL B % from best"),
+        "Deadlift": ("DLGL", "GL D % from best"),
+        "Total": ("TPT T", "GL T % from best")
     }
     gl_points_column, percentage_column = column_mapping[lift_type]
-    sorted_df = df.sort_values(by=gl_points_column, ascending=False)
+    sorted_df = df[df['Sex'] == Sex].sort_values(by=gl_points_column, ascending=False)
     rank = sorted_df[gl_points_column].rank(pct=True)
     rank_value = rank[sorted_df[gl_points_column] <= gl_points].max()
     lifter_percentage_rank = rank_value * 100
-
+	
     # Correcting strength level classification based on updated thresholds
     if lifter_percentage_rank < 20:
         strength_level = "Beginner"
@@ -75,8 +87,16 @@ def index():
         bodyweight = float(request.form["bodyweight"])
         lift = float(request.form["lift"])
         lift_type = request.form["lift_type"]
-        lifter_percentage_rank, strength_level = get_percentage_rank(lift, bodyweight, lift_type)
+        Sex = request.form["Sex"]
+
+        # Handle 'shemale' option as 'male'
+        if Sex == "shemale":
+            Sex = "M"  # Treat 'shemale' as 'M' (Male)
+
+        # Compute rank and strength level
+        lifter_percentage_rank, strength_level = get_percentage_rank(lift, bodyweight, lift_type, Sex)
         stars = calculate_stars(lifter_percentage_rank)
+
         result = {
             "lift": lift,
             "bodyweight": bodyweight,
@@ -85,6 +105,7 @@ def index():
             "lift_type": lift_type,
             "stars": stars
         }
+
     return render_template("index.html", result=result)
 
 if __name__ == "__main__":
