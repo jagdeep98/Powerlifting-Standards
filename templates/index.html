@@ -10,45 +10,46 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column; /* Allows footer to align correctly */
-            height: 100vh; /* Full screen height */
+            flex-direction: column;
+            height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
 
         .container {
-            text-align: center; /* Center the text */
+            text-align: center;
             width: 90%;
-            max-width: 600px; /* Limit the width of the form */
+            max-width: 600px;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px; /* Adds space above footer */
+            margin-bottom: 10px;
         }
 
         h1 {
             color: #333;
         }
 
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
         label {
             font-size: 18px;
-            margin: 10px 0;
-            display: block;
+            width: 40%; /* Adjust width as needed */
+            text-align: left;
         }
 
         input[type="text"], input[type="number"], select {
-            width: 90%;
+            width: 60%;
             padding: 10px;
-            margin: 10px 0;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 5px;
-        }
-
-        select {
-            width: 95%; /* Ensures dropdown is the same width as the text boxes */
         }
 
         button {
@@ -59,6 +60,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 15px;
         }
 
         button:hover {
@@ -106,29 +108,37 @@
 <body>
     <div class="container">
         <h1>Powerlifting Standards</h1>
-        <form method="POST">	
-            <label for="lift_type">Select Lift Type:</label>
-            <select name="lift_type" id="lift_type">
-                <option value="Squat">Squat</option>
-                <option value="Bench">Bench Press</option>
-                <option value="Deadlift">Deadlift</option>
-                <option value="Total">Total</option>
-            </select>
-			
-            <label for="Sex">Select Sex:</label>
-            <select name="Sex" id="Sex">
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="shemale">Shemale</option>
-            </select>
-					
-            <label for="lift">Weight Lifted (kg):</label>
-            <input type="text" name="lift" id="lift">
+        <form method="POST">
+            <div class="form-group">
+                <label for="lift_type">Select Lift Type:</label>
+                <select name="lift_type" id="lift_type">
+                    <option value="Squat">Squat</option>
+                    <option value="Bench">Bench Press</option>
+                    <option value="Deadlift">Deadlift</option>
+                    <option value="Total">Total</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="Sex">Select Sex:</label>
+                <select name="Sex" id="Sex">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="shemale">Shemale</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="lift">Weight Lifted (kg):</label>
+                <input type="text" name="lift" id="lift">
+            </div>
 
-            <label for="bodyweight">Bodyweight (kg):</label>
-            <input type="text" name="bodyweight" id="bodyweight">
+            <div class="form-group">
+                <label for="bodyweight">Bodyweight (kg):</label>
+                <input type="text" name="bodyweight" id="bodyweight">
+            </div>
 
-            <button type="submit">Submit</button>
+            <button type="calculate">Calculate</button>
         </form>
 
         {% if result %}
@@ -139,11 +149,11 @@
             <div class="stars">
                 {% for i in range(5) %}
                     {% if i < result.stars|int %}
-                        <span class="star filled">★</span> <!-- Full star -->
+                        <span class="star filled">★</span>
                     {% elif i < result.stars %}
-                        <span class="star filled">☆</span> <!-- Half star -->
+                        <span class="star filled">☆</span>
                     {% else %}
-                        <span class="star">☆</span> <!-- Empty star -->
+                        <span class="star">☆</span>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -154,7 +164,7 @@
     <footer>
         These standards are based on data from 172,398 lifters from 
         <a href="https://www.openpowerlifting.org/" target="_blank">openpowerlifting.org</a>, 
-		specifically those who competed in raw (with sleeves) full power meets, achieved a total, and participated in IPF-affiliated competitions, with no repeat name entries.
+		specifically those who competed and achieved a total in raw (with sleeves) full power IPF-affiliated meets (with repeat name entries removed).
     </footer>
 </body>
 </html>
