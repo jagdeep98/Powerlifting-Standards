@@ -17,6 +17,31 @@
             background-color: #f4f4f4;
         }
 
+		.navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            width: 100%;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .navbar a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+		
         .container {
             text-align: center;
             width: 90%;
@@ -106,11 +131,31 @@
     </style>
 </head>
 <body>
+
+<div class="navbar">
+        <a href="/" class="active">Home</a>
+        <a href="/about">About</a>
+    </div>
+
     <div class="container">
         <h1>Powerlifting Standards</h1>
         <form method="POST">
             <div class="form-group">
-                <label for="lift_type">Select Lift Type:</label>
+                <label for="division">Age:</label>
+                <select name="division" id="division">
+                    <option value="Overall">Any</option>
+					<option value="Sub-Junior">Sub-Junior (14-18 Years Old)</option>
+                    <option value="Junior">Junior (19-23 Years Old)</option>
+                    <option value="Open">Open (24-39 Years Old)</option>
+                    <option value="Master I">Master I (40-49 Years Old)</option>
+                    <option value="Master II">Master II (49-59 Years Old)</option>
+                    <option value="Master III">Master III (60-69 Years Old)</option>
+                    <option value="Master IV">Master IV (70+ Years Old)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lift_type">Lift Type:</label>
                 <select name="lift_type" id="lift_type">
                     <option value="Squat">Squat</option>
                     <option value="Bench">Bench Press</option>
@@ -120,7 +165,7 @@
             </div>
             
             <div class="form-group">
-                <label for="Sex">Select Sex:</label>
+                <label for="Sex">Sex:</label>
                 <select name="Sex" id="Sex">
                     <option value="M">Male</option>
                     <option value="F">Female</option>
@@ -128,43 +173,56 @@
                 </select>
             </div>
             
-            <div class="form-group">
-                <label for="lift">Weight Lifted (kg):</label>
-                <input type="text" name="lift" id="lift">
-            </div>
+			
+			 <div class="form-group">
+            <label for="lift">Weight Lifted:</label>
+            <input type="text" name="lift" id="lift">
+            <select name="lift_unit" id="lift_unit">
+                <option value="kg">kg</option>
+                <option value="lbs">lbs</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="bodyweight">Bodyweight (kg):</label>
-                <input type="text" name="bodyweight" id="bodyweight">
-            </div>
+        <div class="form-group">
+            <label for="bodyweight">Bodyweight:</label>
+            <input type="text" name="bodyweight" id="bodyweight">
+            <select name="bodyweight_unit" id="bodyweight_unit">
+                <option value="kg">kg</option>
+                <option value="lbs">lbs</option>
+            </select>
+        </div>
 
-            <button type="calculate">Calculate</button>
+            <button type="submit">Calculate</button>
         </form>
 
-        {% if result %}
-        <div class="output">
-            <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
-            <p>Lifting {{ result.lift }}kg at {{ result.bodyweight }}kg bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of lifters.</p>
+{% if result %}
+    <div class="output">		
+		{% if result.division == "Overall" %}
+    <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
+    <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.Sex }} powerlifters.</p>
+{% else %}
+    <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
+    <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.division }} {{ result.Sex }} powerlifters.</p>
+{% endif %}
 
-            <div class="stars">
-                {% for i in range(5) %}
-                    {% if i < result.stars|int %}
-                        <span class="star filled">★</span>
-                    {% elif i < result.stars %}
-                        <span class="star filled">☆</span>
-                    {% else %}
-                        <span class="star">☆</span>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
+		
+    <div class="stars">
+        {% for i in range(5) %}
+            {% if i < result.stars|int %}
+                <span class="star filled">★</span>
+            {% elif i < result.stars %}
+                <span class="star filled">☆</span>
+            {% else %}
+                <span class="star">☆</span>
+            {% endif %}
+        {% endfor %}
     </div>
+</div>
+{% endif %}
+ </div>
 
     <footer>
-        These standards are based on data from 172,398 lifters from 
-        <a href="https://www.openpowerlifting.org/" target="_blank">openpowerlifting.org</a>, 
-		specifically those who competed and achieved a total in raw (with sleeves) full power IPF-affiliated meets (with repeat name entries removed).
+        <strong>&#169; 2024 Jagdeep Singh Tamber. All rights reserved.</strong>
     </footer>
 </body>
 </html>
