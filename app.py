@@ -5,7 +5,7 @@ import math
 app = Flask(__name__)
 
 # Load the dataset
-df = pd.read_csv('processed_openipf_2024_10_26.csv')
+df = pd.read_csv('processed_openipf_2024_10_26_with_division_and_sex_overall.csv')
 
 # Constants for GL Points formula for males and females
 constants = {
