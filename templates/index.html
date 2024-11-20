@@ -196,16 +196,13 @@
         </form>
 
 {% if result %}
-    <div class="output">		
-		{% if result.division == "Overall" %}
-    <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
-    <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.Sex }} powerlifters.</p>
-{% else %}
-    <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
-    <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.division }} {{ result.Sex }} powerlifters.</p>
-{% endif %}
-
-		
+    {% if result.division == "Overall" %}
+        <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
+        <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.Sex }} powerlifters.</p>
+    {% else %}
+        <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
+        <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.division }} {{ result.Sex }} powerlifters.</p>
+    {% endif %}
     <div class="stars">
         {% for i in range(5) %}
             {% if i < result.stars|int %}
@@ -217,7 +214,6 @@
             {% endif %}
         {% endfor %}
     </div>
-</div>
 {% endif %}
  </div>
 
