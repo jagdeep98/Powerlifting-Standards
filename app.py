@@ -126,6 +126,21 @@ def index():
         
         if bodyweight_unit == "lbs":
             bodyweight = lbs_to_kg(bodyweight)
+			
+		 # Mapping of Division abbreviations to full names
+        division_map = {
+            "Overall": "Overall",
+            "SJ": "Sub-Junior",
+            "J": "Junior",
+            "O": "Open",
+            "M1": "Master I",
+            "M2": "Master II",
+            "M3": "Master III",
+            "M4": "Master IV"
+        }
+
+        # Get the full name of the division
+        full_division = division_map.get(division, division)	
 		
 		# Mapping of Sex values to full names
         sex_map = {
@@ -146,20 +161,20 @@ def index():
         stars = calculate_stars(lifter_percentage_rank)
 
 
-        # Prepare result, include the original units used
+         # Prepare result, include the original units used
         result = {
-    "original_lift": original_lift,  # Unconverted lift in user's selected unit
-    "original_bodyweight": original_bodyweight,  # Unconverted bodyweight in user's selected unit
-    "lift": lift,  # Converted lift (kg)
-    "bodyweight": bodyweight,  # Converted bodyweight (kg)
-    "lifter_percentage_rank": round(lifter_percentage_rank, 1),
-    "strength_level": strength_level,
-    "lift_type": lift_type,
-    "division": division,
-    "Sex": full_sex,
-    "stars": stars,
-    "lift_unit": lift_unit,  # User's selected unit (kg/lbs)
-    "bodyweight_unit": bodyweight_unit  # User's selected unit (kg/lbs)
+            "original_lift": original_lift,  # Unconverted lift in user's selected unit
+            "original_bodyweight": original_bodyweight,  # Unconverted bodyweight in user's selected unit
+            "lift": lift,  # Converted lift (kg)
+            "bodyweight": bodyweight,  # Converted bodyweight (kg)
+            "lifter_percentage_rank": round(lifter_percentage_rank, 1),
+            "strength_level": strength_level,
+            "lift_type": lift_type,
+            "division": full_division,  # Use full division name
+            "Sex": full_sex,
+            "stars": stars,
+            "lift_unit": lift_unit,  # User's selected unit (kg/lbs)
+            "bodyweight_unit": bodyweight_unit  # User's selected unit (kg/lbs)
 }
 
     return render_template("index.html", result=result)
