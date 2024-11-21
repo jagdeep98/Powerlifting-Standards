@@ -79,7 +79,7 @@ input[type="text"] {
 
 /* Adjust width of unit dropdowns for Weight Lifted and Bodyweight */
 .select-unit {
-    width: calc(40% - 10px); /* Adjust width to pair well with input field */
+    width: calc(20% - 10px); /* Adjust width to pair well with input field */
     margin: 0; /* Remove any extra margin */
     border: 1px solid #ddd;
     border-left: none; /* Remove left border to join with input */
