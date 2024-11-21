@@ -69,7 +69,7 @@ body {
 
 /* Styling for textboxes (Weight Lifted and Bodyweight) */
 input[type="text"] {
-    width: calc(60% - 10px); /* Adjusted width so input and dropdown touch neatly */
+    width: calc(30% - 10px); /* Adjusted width so input and dropdown touch neatly */
     padding: 10px;
     margin: 0; /* Remove any extra margin */
     border: 1px solid #ddd;
@@ -147,6 +147,7 @@ button:hover {
 footer {
     text-align: center;
     margin-top: 20px;  
-    padding: 10px 0;  
+    padding: 10px 0; 
+    width: auto;	
 }
 
