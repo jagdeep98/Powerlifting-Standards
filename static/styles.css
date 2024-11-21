@@ -1,0 +1,152 @@
+/* Ensure body has proper padding and background color */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background */
+    margin: 0;
+    padding-top: 60px; /* Adds space for the fixed navbar */
+}
+
+/* Navbar styling - fixed at the top */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #333; /* Dark background for navbar */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navbar link styling */
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
+    font-size: 16px;
+}
+
+/* Hover effect for navbar links */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Active link styling (green) */
+.navbar a.active {
+    background-color: #4CAF50; /* Green color for active page */
+    color: white;
+}
+
+/* Styling for main content container */
+.container, .about-content {
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Margin to provide space below navbar */
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the left */
+}
+
+/* Label styling */
+.form-group label {
+    font-weight: bold;
+    width: 30%; /* Adjust label width */
+    margin-right: 10px; /* Space between label and input area */
+}
+
+/* Styling for textboxes (Weight Lifted and Bodyweight) */
+input[type="text"] {
+    width: calc(60% - 10px); /* Adjusted width so input and dropdown touch neatly */
+    padding: 10px;
+    margin: 0; /* Remove any extra margin */
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px; /* Rounded corners on left side only */
+    box-sizing: border-box;
+}
+
+/* Adjust width of unit dropdowns for Weight Lifted and Bodyweight */
+.select-unit {
+    width: calc(40% - 10px); /* Adjust width to pair well with input field */
+    margin: 0; /* Remove any extra margin */
+    border: 1px solid #ddd;
+    border-left: none; /* Remove left border to join with input */
+    border-radius: 0 5px 5px 0; /* Rounded corners on right side only */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Styling for dropdown menus (Age, Lift Type, Sex) */
+select {
+    width: 100%; /* Set width of dropdown menus to 60% */
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Align form groups that are centered */
+.center-form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Styling for the submit button */
+button {
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #45a049; /* Slightly darker green */
+}
+
+/* Styling for stars in result */
+.stars {
+    margin-top: 20px;
+}
+
+.star {
+    font-size: 24px;
+    color: #f0ad4e; /* Gold color for stars */
+    margin: 0 2px;
+}
+
+.star.filled {
+    color: #ffca28; /* Bright gold for filled stars */
+}
+
+.stars.centered {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;  
+    padding: 10px 0;  
+}
+
