@@ -65,27 +65,36 @@ body {
     font-weight: bold;
     width: 30%; /* Adjust label width */
     margin-right: 10px; /* Space between label and input area */
+    text-align: left; /* Ensures the label aligns left */
 }
 
-/* Styling for textboxes (Weight Lifted and Bodyweight) */
-input[type="text"] {
-    width: calc(30% - 10px); /* Adjusted width so input and dropdown touch neatly */
+/* Styling for Weight Lifted and Bodyweight input and dropdowns (move them to the right) */
+#lift, #bodyweight {
+    width: calc(30% - 10px); /* Adjust width to fit your layout */
     padding: 10px;
-    margin: 0; /* Remove any extra margin */
+    margin: 0;
     border: 1px solid #ddd;
-    border-radius: 5px 0 0 5px; /* Rounded corners on left side only */
+    border-radius: 5px 0 0 5px;
     box-sizing: border-box;
 }
 
-/* Adjust width of unit dropdowns for Weight Lifted and Bodyweight */
+/* Styling for unit dropdowns */
 .select-unit {
     width: calc(20% - 10px); /* Adjust width to pair well with input field */
-    margin: 0; /* Remove any extra margin */
+    margin: 0;
     border: 1px solid #ddd;
-    border-left: none; /* Remove left border to join with input */
-    border-radius: 0 5px 5px 0; /* Rounded corners on right side only */
+    border-left: none;
+    border-radius: 0 5px 5px 0;
     padding: 10px;
     box-sizing: border-box;
+}
+
+/* Add this rule to the specific form groups for the "Weight Lifted" and "Bodyweight" fields */
+.form-group#lift-group,
+.form-group#bodyweight-group {
+    display: flex;
+    justify-content: flex-start;  /* Align the label to the far left, input fields to the right */
+    width: 100%;  /* Ensures the form group takes the full width */
 }
 
 /* Styling for dropdown menus (Age, Lift Type, Sex) */
@@ -150,4 +159,3 @@ footer {
     padding: 10px 0; 
     width: auto;	
 }
-
