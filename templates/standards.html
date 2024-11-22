@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Powerlifting Standards</title>
+    <title>Tables</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -12,53 +12,53 @@
 {% include 'navbar.html' %}
 
 <div class="container">
-    <h1>Powerlifting Standards</h1>
+    <h1>Tables</h1>
 
     <form method="POST">
-        <!-- Division dropdown -->
-        <div class="form-group center-form-group">
-            <label for="division">Age:</label>
-            <select name="division" id="division">
-                <option value="Overall" {% if result and result.division == 'Overall' %}selected{% endif %}>Any</option>
-                <option value="SJ" {% if result and result.division == 'SJ' %}selected{% endif %}>Sub-Junior (14-18 Years Old)</option>
-                <option value="J" {% if result and result.division == 'J' %}selected{% endif %}>Junior (19-23 Years Old)</option>
-                <option value="O" {% if result and result.division == 'O' %}selected{% endif %}>Open (24-39 Years Old)</option>
-                <option value="M1" {% if result and result.division == 'M1' %}selected{% endif %}>Master I (40-49 Years Old)</option>
-                <option value="M2" {% if result and result.division == 'M2' %}selected{% endif %}>Master II (49-59 Years Old)</option>
-                <option value="M3" {% if result and result.division == 'M3' %}selected{% endif %}>Master III (60-69 Years Old)</option>
-                <option value="M4" {% if result and result.division == 'M4' %}selected{% endif %}>Master IV (70+ Years Old)</option>
-            </select>
-        </div>
+    <!-- Division dropdown -->
+    <div class="form-group center-form-group">
+        <label for="division">Age:</label>
+        <select name="division" id="division">
+            <option value="Overall" {% if result and result.division == 'Overall' %}selected{% endif %}>Any</option>
+            <option value="SJ" {% if result and result.division == 'SJ' %}selected{% endif %}>Sub-Junior (14-18 Years Old)</option>
+            <option value="J" {% if result and result.division == 'J' %}selected{% endif %}>Junior (19-23 Years Old)</option>
+            <option value="O" {% if result and result.division == 'O' %}selected{% endif %}>Open (24-39 Years Old)</option>
+            <option value="M1" {% if result and result.division == 'M1' %}selected{% endif %}>Master I (40-49 Years Old)</option>
+            <option value="M2" {% if result and result.division == 'M2' %}selected{% endif %}>Master II (49-59 Years Old)</option>
+            <option value="M3" {% if result and result.division == 'M3' %}selected{% endif %}>Master III (60-69 Years Old)</option>
+            <option value="M4" {% if result and result.division == 'M4' %}selected{% endif %}>Master IV (70+ Years Old)</option>
+        </select>
+    </div>
 
-        <!-- Lift Type -->
-        <div class="form-group">
-            <label for="lift_type">Lift Type:</label>
-            <select name="lift_type" id="lift_type">
-                <option value="Squat" {% if result and result.lift_type == 'Squat' %}selected{% endif %}>Squat</option>
-                <option value="Bench" {% if result and result.lift_type == 'Bench Press' %}selected{% endif %}>Bench Press</option>
-                <option value="Deadlift" {% if result and result.lift_type == 'Deadlift' %}selected{% endif %}>Deadlift</option>
-                <option value="Total" {% if result and result.lift_type == 'Total' %}selected{% endif %}>Total</option>
-            </select>
-        </div>
+    <!-- Lift Type dropdown -->
+    <div class="form-group">
+        <label for="lift_type">Lift Type:</label>
+        <select name="lift_type" id="lift_type">
+            <option value="Squat" {% if result and result.lift_type == 'Squat' %}selected{% endif %}>Squat</option>
+            <option value="Bench" {% if result and result.lift_type == 'Bench Press' %}selected{% endif %}>Bench Press</option>
+            <option value="Deadlift" {% if result and result.lift_type == 'Deadlift' %}selected{% endif %}>Deadlift</option>
+            <option value="Total" {% if result and result.lift_type == 'Total' %}selected{% endif %}>Total</option>
+        </select>
+    </div>
 
-        <!-- Sex -->
-        <div class="form-group">
-            <label for="Sex">Sex:</label>
-            <select name="Sex" id="Sex">
-                <option value="M" {% if result and result.Sex == 'Male' %}selected{% endif %}>Male</option>
-                <option value="F" {% if result and result.Sex == 'Female' %}selected{% endif %}>Female</option>
-            </select>
-        </div>
+    <!-- Sex dropdown -->
+    <div class="form-group">
+        <label for="Sex">Sex:</label>
+        <select name="Sex" id="Sex">
+            <option value="M" {% if result and result.Sex == 'M' %}selected{% endif %}>Male</option>
+            <option value="F" {% if result and result.Sex == 'F' %}selected{% endif %}>Female</option>
+        </select>
+    </div>
 
-        <button type="submit">Show Standards</button>
-    </form>
-	
-	{% if result_table %}
+    <!-- Submit button -->
+    <button type="submit">Show Standards</button>
+</form>
+
+{% if result_table %}
     <div class="table-container">
         {{ result_table | safe }}
     </div>
 {% endif %}
-
 
 </div>
 
