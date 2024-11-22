@@ -49,6 +49,15 @@
             <option value="F" {% if result and result.Sex == 'F' %}selected{% endif %}>Female</option>
         </select>
     </div>
+	
+	<!-- Weight Unit dropdown (kg or lbs) -->
+<div class="form-group">
+    <label for="weight_unit">Weight Unit:</label>
+    <select name="weight_unit" id="weight_unit">
+        <option value="kg" {% if result and result.weight_unit == 'kg' %}selected{% endif %}>kg</option>
+        <option value="lbs" {% if result and result.weight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+    </select>
+</div>
 
     <!-- Submit button -->
     <button type="submit">Show Standards</button>
