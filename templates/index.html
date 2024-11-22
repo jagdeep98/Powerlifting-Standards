@@ -17,7 +17,7 @@
         <!-- Age dropdown -->
         <div class="form-group center-form-group">
             <label for="division">Age:</label>
-            <select name="division" id="division">
+            <select name="division" id="division" required>
                 <option value="Overall" {% if result and result.division == 'Overall' %}selected{% endif %}>Any</option>
                 <option value="SJ" {% if result and result.division == 'Sub-Junior' %}selected{% endif %}>Sub-Junior (14-18 Years Old)</option>
                 <option value="J" {% if result and result.division == 'Junior' %}selected{% endif %}>Junior (19-23 Years Old)</option>
@@ -32,7 +32,7 @@
         <!-- Lift Type dropdown -->
         <div class="form-group center-form-group">
             <label for="lift_type">Lift Type:</label>
-            <select name="lift_type" id="lift_type">
+            <select name="lift_type" id="lift_type" required>
                 <option value="Squat" {% if result and result.lift_type == 'Squat' %}selected{% endif %}>Squat</option>
                 <option value="Bench" {% if result and result.lift_type == 'Bench Press' %}selected{% endif %}>Bench Press</option>
                 <option value="Deadlift" {% if result and result.lift_type == 'Deadlift' %}selected{% endif %}>Deadlift</option>
@@ -43,32 +43,32 @@
         <!-- Sex dropdown -->
         <div class="form-group center-form-group">
             <label for="Sex">Sex:</label>
-            <select name="Sex" id="Sex">
+            <select name="Sex" id="Sex" required>
                 <option value="M" {% if result and result.Sex == 'Male' %}selected{% endif %}>Male</option>
                 <option value="F" {% if result and result.Sex == 'Female' %}selected{% endif %}>Female</option>
                 <option value="shemale" {% if result and result.Sex == 'Shemale' %}selected{% endif %}>Shemale</option>
             </select>
         </div>
 
- <!-- Weight Lifted input and unit dropdown -->
-<div class="form-group" id="lift-group">
-    <label for="lift">Weight Lifted:</label>
-    <input type="number" name="lift" id="lift" class="input-box" value="{{ result.original_lift if result else '' }}" step="0.1">
-    <select name="lift_unit" id="lift_unit" class="select-unit"> 
-        <option value="kg" {% if result and result.lift_unit == 'kg' %}selected{% endif %}>kg</option>
-        <option value="lbs" {% if result and result.lift_unit == 'lbs' %}selected{% endif %}>lbs</option>
-    </select>
-</div>
+        <!-- Weight Lifted input and unit dropdown -->
+        <div class="form-group" id="lift-group">
+            <label for="lift">Weight Lifted:</label>
+            <input type="number" name="lift" id="lift" class="input-box" value="{{ result.original_lift if result else '' }}" step="0.1" required>
+            <select name="lift_unit" id="lift_unit" class="select-unit" required> 
+                <option value="kg" {% if result and result.lift_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if result and result.lift_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
+        </div>
 
-<!-- Bodyweight input and unit dropdown -->
-<div class="form-group" id="bodyweight-group">
-    <label for="bodyweight">Bodyweight:</label>
-    <input type="number" name="bodyweight" id="bodyweight" class="input-box" value="{{ result.original_bodyweight if result else '' }}" step="0.1">
-    <select name="bodyweight_unit" id="bodyweight_unit" class="select-unit">
-        <option value="kg" {% if result and result.bodyweight_unit == 'kg' %}selected{% endif %}>kg</option>
-        <option value="lbs" {% if result and result.bodyweight_unit == 'lbs' %}selected{% endif %}>lbs</option>
-    </select>
-</div>
+        <!-- Bodyweight input and unit dropdown -->
+        <div class="form-group" id="bodyweight-group">
+            <label for="bodyweight">Bodyweight:</label>
+            <input type="number" name="bodyweight" id="bodyweight" class="input-box" value="{{ result.original_bodyweight if result else '' }}" step="0.1" required>
+            <select name="bodyweight_unit" id="bodyweight_unit" class="select-unit" required>
+                <option value="kg" {% if result and result.bodyweight_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if result and result.bodyweight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
+        </div>
 
         <button type="submit">Calculate</button>
     </form>
@@ -90,10 +90,11 @@
             {% endfor %}
         </div>
     {% endif %}
+
 </div>
 
 <footer>
-     <p>If you're unsure of your 1 rep max but have done a rep max, please defer to the <a href="{{ url_for('one_rm_calculator') }}">1RM Calculator</a> tab.</p>
+    <p>If you're unsure of your 1 rep max but have done a rep max, please defer to the <a href="{{ url_for('one_rm_calculator') }}">1RM Calculator</a> tab.</p>
 </footer>
 
 <footer>
