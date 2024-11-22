@@ -219,39 +219,44 @@ def one_rm_calculator():
     
     return render_template("1rm_calculator.html", result=result)
 	
-# Route for the Standards page (Display standards table)
 @app.route("/standards", methods=["GET", "POST"])
 def standards():
     result_table = None
+    result = None  # Initialize result to store selected form values
+    
     if request.method == "POST":
-        sex = request.form["Sex"]
-        division = request.form["division"]
-        lift_type = request.form["lift_type"]
+        try:
+            sex = request.form["Sex"]
+            division = request.form["division"]
+            lift_type = request.form["lift_type"]
 
-        # Load the CSV file for the selected category (Sex, Division, Lift Type)
-        file_name = f"{sex}_{division}_{lift_type}.csv"
-        file_path = os.path.join('lift_weights_by_category', file_name)
+            # Load the CSV file for the selected category (Sex, Division, Lift Type)
+            file_name = f"{sex}_{division}_{lift_type}.csv"
+            file_path = os.path.join('lift_weights_by_category', file_name)
 
-        # Check if the file exists
-        if os.path.exists(file_path):
-            df_standards = pd.read_csv(file_path)
+            if os.path.exists(file_path):
+                df_standards = pd.read_csv(file_path)
+                
+                if 'Unnamed: 0' in df_standards.columns:
+                    df_standards.rename(columns={'Unnamed: 0': 'Bodyweight'}, inplace=True)
+
+                df_standards.reset_index(drop=True, inplace=True)
+                df_standards = df_standards.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
+
+                result_table = df_standards.to_html(classes="table table-striped", index=False)
             
-            # Rename the 'Unnamed: 0' column to 'Bodyweight' if it exists
-            if 'Unnamed: 0' in df_standards.columns:
-                df_standards.rename(columns={'Unnamed: 0': 'Bodyweight'}, inplace=True)
-
-            # Remove the index column (if it exists) by resetting index and not adding it as a column
-            df_standards.reset_index(drop=True, inplace=True)
-
-            # Round all numerical columns to 1 decimal place
-            df_standards = df_standards.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
-
-            # Convert DataFrame to HTML table and pass to template
-            result_table = df_standards.to_html(classes="table table-striped", index=False)
-        else:
-            result_table = "Data not available for the selected combination."
-
-    return render_template("standards.html", result_table=result_table)
+            # Store the selected form values in result
+            result = {
+                "Sex": sex,
+                "division": division,
+                "lift_type": lift_type
+            }
+            
+        except Exception as e:
+            result_table = f"An error occurred: {str(e)}"
+    
+    # Pass result back to the template along with the table
+    return render_template("standards.html", result_table=result_table, result=result)
 
 if __name__ == "__main__":
     app.run(debug=True)
