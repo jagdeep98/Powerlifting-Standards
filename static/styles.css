@@ -146,38 +146,30 @@ button:hover {
     text-align: center;
 }
 
+/* Make table responsive on smaller screens */
 .table-container {
     width: 90%;  /* Adjust this value to fit your layout */
     max-width: 1200px; /* Set a maximum width for large screens */
     margin: 0 auto;  /* Center align the table */
+    overflow-x: auto;  /* Allow horizontal scrolling on small screens */
 }
 
 table {
     width: 100%;  /* Make the table width fill its container */
-    table-layout: fixed;  /* Ensure the table's columns adjust uniformly */
+    table-layout: auto;  /* Adjust column width dynamically */
     border-collapse: collapse; /* Ensures that borders are collapsed into one */
 }
 
-table.table-bordered {
-    border: 1px solid #ddd;
-    border-radius: 8px; /* Optional: Round the corners of the table */
+/* Adjust header font size for smaller screens */
+table th {
+    font-size: 14px;  /* Slightly smaller font size for headers */
 }
 
-table th, table td {
+/* Optional: Make sure table data has proper alignment and padding */
+table td, table th {
     padding: 10px;  /* Add padding for better readability */
     text-align: left;  /* Align text to the left for consistency */
-}
-
-table.table-striped tbody tr:nth-child(odd) {
-    background-color: #f9f9f9; /* Lighter background for odd rows */
-}
-
-table.table-striped tbody tr:hover {
-    background-color: #f1f1f1; /* Hover effect to highlight rows */
-}
-
-table td, table th {
-    border: 1px solid #ddd;  /* Border for each cell */
+    font-size: 12px;  /* Reduce font size for smaller screens */
 }
 
 /* Optional: Add a more distinctive color for headers */
@@ -185,6 +177,20 @@ table th {
     background-color: #f2f2f2;
     font-weight: bold;
 }
+
+/* Ensure the table is usable on mobile */
+@media (max-width: 768px) {
+    table th, table td {
+        padding: 8px;  /* Reduce padding on smaller screens */
+        font-size: 10px;  /* Further reduce font size on mobile */
+    }
+
+    /* Make table header text smaller on mobile */
+    table th {
+        font-size: 12px;  /* Reduce font size for table headers */
+    }
+}
+
 
 footer {
     text-align: center;
