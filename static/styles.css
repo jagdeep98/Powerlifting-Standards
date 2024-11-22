@@ -15,6 +15,7 @@ body {
     position: fixed;
     top: 0;
     z-index: 1000;
+    box-sizing: border-box; /* Prevent navbar from resizing */
 }
 
 .navbar a {
@@ -148,7 +149,7 @@ button:hover {
 
 /* Make table responsive on smaller screens */
 .table-container {
-    width: 90%;  /* Adjust this value to fit your layout */
+    width: 100%;  /* Ensure the table fits within its container */
     max-width: 1200px; /* Set a maximum width for large screens */
     margin: 0 auto;  /* Center align the table */
     overflow-x: auto;  /* Allow horizontal scrolling on small screens */
@@ -195,4 +196,36 @@ footer {
     text-align: center;
     margin-top: 20px;
     padding: 10px 0;
+}
+
+/* Ensure the navbar doesn't shift when the table content is wide */
+.navbar {
+    box-sizing: border-box; /* Ensure navbar remains the same width */
+}
+
+.navbar a {
+    flex-grow: 0; /* Prevent links from stretching */
+}
+
+/* Fix body layout to prevent it from shifting with wide tables */
+.container {
+    max-width: 100%; /* Allow the container to stretch across the page */
+}
+
+/* Adjust table container width if needed */
+.table-container {
+    max-width: 100%; /* Ensure it doesn't overflow beyond the container */
+}
+
+/* Prevent the navbar from shifting */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Add spacing between navbar and content */
+body {
+    padding-top: 60px;
 }
