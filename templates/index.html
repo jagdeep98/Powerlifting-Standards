@@ -50,25 +50,25 @@
             </select>
         </div>
 
-        <!-- Weight Lifted input and unit dropdown -->
-        <div class="form-group">
-            <label for="lift">Weight Lifted:</label>
-            <input type="text" name="lift" id="lift" value="{{ result.original_lift if result else '' }}">
-            <select name="lift_unit" id="lift_unit" class="select-unit"> 
-                <option value="kg" {% if result and result.lift_unit == 'kg' %}selected{% endif %}>kg</option>
-                <option value="lbs" {% if result and result.lift_unit == 'lbs' %}selected{% endif %}>lbs</option>
-            </select>
-        </div>
+ <!-- Weight Lifted input and unit dropdown -->
+<div class="form-group" id="lift-group">
+    <label for="lift">Weight Lifted:</label>
+    <input type="number" name="lift" id="lift" class="input-box" value="{{ result.original_lift if result else '' }}" step="0.1">
+    <select name="lift_unit" id="lift_unit" class="select-unit"> 
+        <option value="kg" {% if result and result.lift_unit == 'kg' %}selected{% endif %}>kg</option>
+        <option value="lbs" {% if result and result.lift_unit == 'lbs' %}selected{% endif %}>lbs</option>
+    </select>
+</div>
 
-        <!-- Bodyweight input and unit dropdown -->
-        <div class="form-group">
-            <label for="bodyweight">Bodyweight:</label>
-            <input type="text" name="bodyweight" id="bodyweight" value="{{ result.original_bodyweight if result else '' }}">
-            <select name="bodyweight_unit" id="bodyweight_unit" class="select-unit">
-                <option value="kg" {% if result and result.bodyweight_unit == 'kg' %}selected{% endif %}>kg</option>
-                <option value="lbs" {% if result and result.bodyweight_unit == 'lbs' %}selected{% endif %}>lbs</option>
-            </select>
-        </div>
+<!-- Bodyweight input and unit dropdown -->
+<div class="form-group" id="bodyweight-group">
+    <label for="bodyweight">Bodyweight:</label>
+    <input type="number" name="bodyweight" id="bodyweight" class="input-box" value="{{ result.original_bodyweight if result else '' }}" step="0.1">
+    <select name="bodyweight_unit" id="bodyweight_unit" class="select-unit">
+        <option value="kg" {% if result and result.bodyweight_unit == 'kg' %}selected{% endif %}>kg</option>
+        <option value="lbs" {% if result and result.bodyweight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+    </select>
+</div>
 
         <button type="submit">Calculate</button>
     </form>

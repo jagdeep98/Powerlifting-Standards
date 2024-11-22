@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1RM Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1>1RM Calculator</h1>
+    
+    <form method="POST">
+        <!-- Weight input with unit selection dropdown -->
+        <div class="form-group" id="weight-group">
+            <label for="weight">Weight:</label>
+            <input type="number" name="weight" id="weight" class="input-box" step="0.1" value="{{ result.weight if result else '' }}" required>
+            <select name="weight_unit" id="weight_unit" class="select-unit">
+                <option value="kg" {% if result and result.weight_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if result and result.weight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
+        </div>
+
+        <!-- Repetitions input -->
+        <div class="form-group center-form-group">
+            <label for="reps">Repetitions:</label>
+            <input type="number" name="reps" id="reps" class="input-box" value="{{ result.reps if result else '' }}" required>
+        </div>
+
+        <!-- Formula selection dropdown -->
+        <div class="form-group center-form-group">
+            <label for="formula">Select Formula:</label>
+            <select name="formula" id="formula" class="input-box" required>
+                <option value="Brzycki" {% if result and result.formula == 'Brzycki' %}selected{% endif %}>Brzycki</option>
+                <option value="Epley" {% if result and result.formula == 'Epley' %}selected{% endif %}>Epley</option>
+            </select>
+        </div>
+
+        <button type="submit">Calculate 1RM</button>
+    </form>
+
+    {% if result %}
+        {% if result.error %}
+            <p>{{ result.error }}</p>
+        {% else %}
+            <p>Your estimated 1RM is: <strong>{{ result.one_rm }} {{ result.weight_unit }}</strong></p>
+        {% endif %}
+    {% endif %}
+
+</div>
+
+<footer>
+    <strong>&#169; 2024 Jagdeep Singh Tamber. All rights reserved.</strong>
+</footer>
+</body>
+</html>
