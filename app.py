@@ -111,6 +111,11 @@ def epley_1rm(weight, reps):
 def about():
     return render_template("about.html")
 
+# Route for the Strength Categories page
+@app.route("/strength-categories")  # Note the hyphen instead of underscore
+def strength_categories():
+    return render_template("strength_categories.html")
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None  # Initialize the result variable
@@ -219,6 +224,14 @@ def one_rm_calculator():
     
     return render_template("1rm_calculator.html", result=result)
 	
+# Function to convert kg to lbs
+def kg_to_lbs(kg):
+    return kg * 2.20462
+
+# Function to convert lbs to kg
+def lbs_to_kg(lbs):
+    return lbs / 2.20462
+
 @app.route("/standards", methods=["GET", "POST"])
 def standards():
     result_table = None
@@ -229,6 +242,7 @@ def standards():
             sex = request.form["Sex"]
             division = request.form["division"]
             lift_type = request.form["lift_type"]
+            weight_unit = request.form["weight_unit"]
 
             # Load the CSV file for the selected category (Sex, Division, Lift Type)
             file_name = f"{sex}_{division}_{lift_type}.csv"
@@ -241,6 +255,16 @@ def standards():
                     df_standards.rename(columns={'Unnamed: 0': 'Bodyweight'}, inplace=True)
 
                 df_standards.reset_index(drop=True, inplace=True)
+
+                # If weight_unit is lbs, convert all bodyweight values to lbs
+                if weight_unit == 'lbs':
+                    df_standards['Bodyweight'] = df_standards['Bodyweight'].apply(kg_to_lbs)
+                    # Assuming other columns also represent weight and need conversion
+                    for col in df_standards.columns:
+                        if col != 'Bodyweight':  # Skip the bodyweight column
+                            df_standards[col] = df_standards[col].apply(kg_to_lbs)
+
+                # Apply rounding to all numeric values
                 df_standards = df_standards.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
 
                 result_table = df_standards.to_html(classes="table table-striped", index=False)
@@ -249,7 +273,8 @@ def standards():
             result = {
                 "Sex": sex,
                 "division": division,
-                "lift_type": lift_type
+                "lift_type": lift_type,
+                "weight_unit": weight_unit  # Add weight_unit to result
             }
             
         except Exception as e:
