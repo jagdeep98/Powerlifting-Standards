@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import pandas as pd
+import os
 import math
 
 app = Flask(__name__)
@@ -48,10 +49,10 @@ def get_percentage_rank(lift, bodyweight, lift_type, Sex, division):
     # Use overall percentage if 'Overall' is selected
     if division == "Overall":
         column_mapping = {
-            "Squat": ("SQGL", "GL S % from best"),
-            "Bench": ("BGL", "GL B % from best"),
-            "Deadlift": ("DLGL", "GL D % from best"),
-            "Total": ("TGL", "GL T % from best")
+            "Squat": ("SQGL", ""),
+            "Bench": ("BGL", ""),
+            "Deadlift": ("DLGL", ""),
+            "Total": ("TGL", "")
         }
 
     gl_points_column, percentage_column = column_mapping[lift_type]
@@ -98,86 +99,159 @@ def calculate_stars(percentage):
     else:
         return 5
 
+	# 1RM calculator functions
+def brzycki_1rm(weight, reps):
+    return weight * (36 / (37 - reps))
+
+def epley_1rm(weight, reps):
+    return weight * (1 + (0.0333 * reps))	
+		
 # Route for the About page
 @app.route("/about")
 def about():
     return render_template("about.html")
 
-# Route for the Home page (Powerlifting Standards)		
 @app.route("/", methods=["GET", "POST"])
 def index():
+    result = None  # Initialize the result variable
+    if request.method == "POST":
+        try:
+            # Read input data
+            bodyweight = float(request.form["bodyweight"])
+            lift = float(request.form["lift"])
+            lift_type = request.form["lift_type"]
+            Sex = request.form["Sex"]
+            division = request.form["division"]
+            lift_unit = request.form["lift_unit"]
+            bodyweight_unit = request.form["bodyweight_unit"]
+            
+            # Save the original values before conversion
+            original_lift = lift
+            original_bodyweight = bodyweight
+
+            # Convert to kg if the unit is lbs
+            if lift_unit == "lbs":
+                lift = lbs_to_kg(lift)
+            
+            if bodyweight_unit == "lbs":
+                bodyweight = lbs_to_kg(bodyweight)
+
+            # Mapping of Division abbreviations to full names
+            division_map = {
+                "Overall": "Overall",
+                "SJ": "Sub-Junior",
+                "J": "Junior",
+                "O": "Open",
+                "M1": "Master I",
+                "M2": "Master II",
+                "M3": "Master III",
+                "M4": "Master IV"
+            }
+
+            # Get the full name of the division
+            full_division = division_map.get(division, division)
+
+            # Mapping of Sex values to full names
+            sex_map = {
+                "M": "Male",
+                "F": "Female",
+                "shemale": "Shemale"
+            }
+
+            # Convert short 'Sex' to full name
+            full_sex = sex_map.get(Sex, Sex)  # Default to 'Sex' if it doesn't match
+
+            # Handle 'shemale' option as 'M'
+            if Sex == "shemale":
+                Sex = "M"  # Treat 'shemale' as 'M' (Male)
+
+            # Compute rank and strength level
+            lifter_percentage_rank, strength_level = get_percentage_rank(lift, bodyweight, lift_type, Sex, division)
+            stars = calculate_stars(lifter_percentage_rank)
+
+            # Prepare result, include the original units used
+            result = {
+                "original_lift": original_lift,  # Unconverted lift in user's selected unit
+                "original_bodyweight": original_bodyweight,  # Unconverted bodyweight in user's selected unit
+                "lift": lift,  # Converted lift (kg)
+                "bodyweight": bodyweight,  # Converted bodyweight (kg)
+                "lifter_percentage_rank": round(lifter_percentage_rank, 1),
+                "strength_level": strength_level,
+                "lift_type": lift_type,
+                "division": full_division,  # Use full division name
+                "Sex": full_sex,
+                "stars": stars,
+                "lift_unit": lift_unit,  # User's selected unit (kg/lbs)
+                "bodyweight_unit": bodyweight_unit  # User's selected unit (kg/lbs)
+            }
+        except Exception as e:
+            result = {"error": f"An error occurred: {str(e)}"}
+
+    # Always return the template with the result
+    return render_template("index.html", result=result)	
+	
+# Route for the 1RM calculator page
+@app.route("/1rm_calculator", methods=["GET", "POST"])
+def one_rm_calculator():
     result = None
     if request.method == "POST":
-        bodyweight = float(request.form["bodyweight"])
-        lift = float(request.form["lift"])
-        lift_type = request.form["lift_type"]
-        Sex = request.form["Sex"]
+        try:
+            weight = float(request.form["weight"])
+            reps = int(request.form["reps"])
+            formula = request.form["formula"]
+            weight_unit = request.form["weight_unit"]  # Retrieve the selected unit from the form
+
+            # Calculate 1RM based on the selected formula
+            if formula == "Brzycki":
+                one_rm = brzycki_1rm(weight, reps)
+            elif formula == "Epley":
+                one_rm = epley_1rm(weight, reps)
+            
+            result = {
+                "weight": weight,
+                "reps": reps,
+                "formula": formula,
+                "one_rm": round(one_rm, 2),
+                "weight_unit": weight_unit  # Include weight_unit in the result dictionary
+            }
+        except Exception as e:
+            result = {"error": f"An error occurred: {str(e)}"}
+    
+    return render_template("1rm_calculator.html", result=result)
+	
+# Route for the Standards page (Display standards table)
+@app.route("/standards", methods=["GET", "POST"])
+def standards():
+    result_table = None
+    if request.method == "POST":
+        sex = request.form["Sex"]
         division = request.form["division"]
-        lift_unit = request.form["lift_unit"]
-        bodyweight_unit = request.form["bodyweight_unit"]
-		
-          # Save the original values before conversion
-        original_lift = lift
-        original_bodyweight = bodyweight
+        lift_type = request.form["lift_type"]
 
-        # Convert to kg if the unit is lbs
-        if lift_unit == "lbs":
-            lift = lbs_to_kg(lift)
-        
-        if bodyweight_unit == "lbs":
-            bodyweight = lbs_to_kg(bodyweight)
-			
-		 # Mapping of Division abbreviations to full names
-        division_map = {
-            "Overall": "Overall",
-            "SJ": "Sub-Junior",
-            "J": "Junior",
-            "O": "Open",
-            "M1": "Master I",
-            "M2": "Master II",
-            "M3": "Master III",
-            "M4": "Master IV"
-        }
+        # Load the CSV file for the selected category (Sex, Division, Lift Type)
+        file_name = f"{sex}_{division}_{lift_type}.csv"
+        file_path = os.path.join('lift_weights_by_category', file_name)
 
-        # Get the full name of the division
-        full_division = division_map.get(division, division)	
-		
-		# Mapping of Sex values to full names
-        sex_map = {
-            "M": "Male",
-            "F": "Female",
-            "shemale": "Shemale"
-        }
+        # Check if the file exists
+        if os.path.exists(file_path):
+            df_standards = pd.read_csv(file_path)
+            
+            # Rename the 'Unnamed: 0' column to 'Bodyweight' if it exists
+            if 'Unnamed: 0' in df_standards.columns:
+                df_standards.rename(columns={'Unnamed: 0': 'Bodyweight'}, inplace=True)
 
-        # Convert short 'Sex' to full name
-        full_sex = sex_map.get(Sex, Sex)  # Default to 'Sex' if it doesn't match
+            # Remove the index column (if it exists) by resetting index and not adding it as a column
+            df_standards.reset_index(drop=True, inplace=True)
 
-        # Handle 'shemale' option as 'M'
-        if Sex == "shemale":
-            Sex = "M"  # Treat 'shemale' as 'M' (Male)
+            # Round all numerical columns to 1 decimal place
+            df_standards = df_standards.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
 
-        # Compute rank and strength level
-        lifter_percentage_rank, strength_level = get_percentage_rank(lift, bodyweight, lift_type, Sex, division)
-        stars = calculate_stars(lifter_percentage_rank)
+            # Convert DataFrame to HTML table and pass to template
+            result_table = df_standards.to_html(classes="table table-striped", index=False)
+        else:
+            result_table = "Data not available for the selected combination."
 
-
-         # Prepare result, include the original units used
-        result = {
-            "original_lift": original_lift,  # Unconverted lift in user's selected unit
-            "original_bodyweight": original_bodyweight,  # Unconverted bodyweight in user's selected unit
-            "lift": lift,  # Converted lift (kg)
-            "bodyweight": bodyweight,  # Converted bodyweight (kg)
-            "lifter_percentage_rank": round(lifter_percentage_rank, 1),
-            "strength_level": strength_level,
-            "lift_type": lift_type,
-            "division": full_division,  # Use full division name
-            "Sex": full_sex,
-            "stars": stars,
-            "lift_unit": lift_unit,  # User's selected unit (kg/lbs)
-            "bodyweight_unit": bodyweight_unit  # User's selected unit (kg/lbs)
-}
-
-    return render_template("index.html", result=result)
+    return render_template("standards.html", result_table=result_table)
 
 if __name__ == "__main__":
     app.run(debug=True)
