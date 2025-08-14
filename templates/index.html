@@ -75,7 +75,13 @@
 
     {% if result %}
         <p>Your Strength Level for {{ result.lift_type }} is <strong>{{ result.strength_level }}</strong>.</p>
-        <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight makes you stronger than {{ result.lifter_percentage_rank }}% of {{ result.division }} {{ result.Sex }} powerlifters.</p>
+        <p>Lifting {{ result.original_lift }}{{ result.lift_unit }} at {{ result.original_bodyweight }}{{ result.bodyweight_unit }} bodyweight 
+    makes you stronger than {{ result.lifter_percentage_rank }}% of 
+    {% if result.division != 'Overall' %}
+        {{ result.division }} 
+    {% endif %}
+    {{ result.Sex }} powerlifters.</p>
+
 
         <!-- Centered Star Rating -->
         <div class="stars centered">
