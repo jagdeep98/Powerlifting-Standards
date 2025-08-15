@@ -24,10 +24,10 @@ constants = {
 
 # Conversion functions
 def kg_to_lbs(kg):
-    return kg * 2.20462
+    return kg * 2.20462262185  # more precise
 
 def lbs_to_kg(lbs):
-    return lbs / 2.20462
+    return lbs / 2.20462262185  # more precise
 
 # GL Points calculation function
 def calculate_gl_points(lift, bodyweight, Sex):
@@ -105,7 +105,45 @@ def brzycki_1rm(weight, reps):
 
 def epley_1rm(weight, reps):
     return weight * (1 + (0.0333 * reps))	
-		
+
+def calculate_glp_points(sex, bodyweight, total):
+    # Constants for Classic Powerlifting
+    if sex == 'M':
+        A = 1199.72839
+        B = 1025.18162
+        C = 0.00921 
+    elif sex == 'F':
+        A = 610.32796
+        B = 1045.59282
+        C = 0.03048
+    else:
+        raise ValueError("Sex must be 'M' or 'F'")
+
+    # GL Points formula
+    points = (100 / (A - B * math.exp(-C * bodyweight))) * total
+    return {'sex': sex, 'bodyweight': bodyweight, 'total': total, 'gl_points': round(points, 2)}
+
+def calculate_dots(sex, bodyweight, total):
+    if sex == 'M':
+        A = -0.000001093
+        B = 0.0007391293
+        C = -0.1918759221
+        D = 24.0900756
+        E = -307.75076
+    elif sex == 'F':
+        A = -0.0000010706
+        B = 0.0005158568
+        C = -0.1126655495
+        D = 13.6175032
+        E = -57.96288
+    else:
+        raise ValueError("Sex must be 'M' or 'F'")
+
+    # DOTS formula
+    denom = A*bodyweight**4 + B*bodyweight**3 + C*bodyweight**2 + D*bodyweight + E
+    dots = total * 500 / denom
+    return {'sex': sex, 'bodyweight': bodyweight, 'total': total, 'dots': round(dots, 3)}
+
 # Route for the About page
 @app.route("/about")
 def about():
@@ -194,7 +232,74 @@ def index():
 
     # Always return the template with the result
     return render_template("index.html", result=result)	
-	
+
+@app.route('/gl_points', methods=['GET', 'POST'])
+def gl_points():
+    result = {}
+    gl_points = None
+    dots = None
+    total_input = bodyweight_input = None
+    total_unit = bodyweight_unit = 'kg'
+
+    if request.method == 'POST':
+        sex = request.form.get('sex', 'M')
+        total_input = request.form.get('total')
+        bodyweight_input = request.form.get('bodyweight')
+        total_unit = request.form.get('total_unit', 'kg')
+        bodyweight_unit = request.form.get('bodyweight_unit', 'kg')
+
+        try:
+            total_input = float(total_input)
+            bodyweight_input = float(bodyweight_input)
+
+            # Convert to kg for validation & calculations
+            total = lbs_to_kg(total_input) if total_unit == 'lbs' else total_input
+            bodyweight = lbs_to_kg(bodyweight_input) if bodyweight_unit == 'lbs' else bodyweight_input
+
+            # ✅ Check if bodyweight is too low
+            if bodyweight <= 40:
+                result['error'] = "Bodyweight must be greater than 40 kg (88 lbs) for calculation."
+                return render_template(
+                    'gl_points.html',
+                    result=result,
+                    gl_points=None,
+                    dots=None,
+                    total_input=total_input,
+                    bodyweight_input=bodyweight_input,
+                    total_unit=total_unit,
+                    bodyweight_unit=bodyweight_unit
+                )
+
+            # Calculate GL Points and DOTS
+            gl_points = round(calculate_glp_points(sex, bodyweight, total)['gl_points'], 2)
+            dots = round(calculate_dots(sex, bodyweight, total)['dots'], 3)
+
+            result = {
+                'sex': sex,
+                'bodyweight': bodyweight_input,
+                'total': total_input,
+                'gl_points': gl_points,
+                'dots': dots,
+                'total_unit': total_unit,
+                'bodyweight_unit': bodyweight_unit
+            }
+
+        except ValueError:
+            result['error'] = "Please enter valid numbers for total and bodyweight."
+        except Exception as e:
+            result['error'] = str(e)
+
+    return render_template(
+        'gl_points.html',
+        result=result,
+        gl_points=gl_points,
+        dots=dots,
+        total_input=total_input,
+        bodyweight_input=bodyweight_input,
+        total_unit=total_unit,
+        bodyweight_unit=bodyweight_unit
+    )
+
 # Route for the 1RM calculator page
 @app.route("/1rm_calculator", methods=["GET", "POST"])
 def one_rm_calculator():
@@ -226,11 +331,11 @@ def one_rm_calculator():
 	
 # Function to convert kg to lbs
 def kg_to_lbs(kg):
-    return kg * 2.20462
+    return kg * 2.20462262185  # more precise
 
 # Function to convert lbs to kg
 def lbs_to_kg(lbs):
-    return lbs / 2.20462
+    return lbs / 2.20462262185  # more precise
 
 @app.route("/standards", methods=["GET", "POST"])
 def standards():
