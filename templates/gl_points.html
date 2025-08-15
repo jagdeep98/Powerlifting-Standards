@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GL Points Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1>GL Points/Dots Calculator</h1>
+    
+    <form method="POST">
+        <!-- Sex selection -->
+        <div class="form-group">
+            <label for="sex">Sex:</label>
+            <select name="sex" id="sex" class="input-box" required>
+                <option value="M" {% if result and result.get('sex') == 'M' %}selected{% endif %}>Male</option>
+                <option value="F" {% if result and result.get('sex') == 'F' %}selected{% endif %}>Female</option>
+            </select>
+        </div>
+
+        <!-- Total input with unit selection -->
+        <div class="form-group" id="total-group">
+            <label for="total">Total:</label>
+            <input type="number" name="total" id="total" class="input-box" step="0.1"
+                value="{{ total_input if total_input is not none else '' }}" required>
+            <select name="total_unit" id="total_unit" class="select-unit">
+                <option value="kg" {% if total_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if total_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
+        </div>
+
+        <!-- Bodyweight input with unit selection -->
+        <div class="form-group" id="bodyweight-group">
+            <label for="bodyweight">Bodyweight:</label>
+            <input type="number" name="bodyweight" id="bodyweight" class="input-box" step="0.1"
+                value="{{ bodyweight_input if bodyweight_input is not none else '' }}" required>
+            <select name="bodyweight_unit" id="bodyweight_unit" class="select-unit">
+                <option value="kg" {% if bodyweight_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if bodyweight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
+        </div>
+
+        <button type="submit">Calculate GL Points</button>
+    </form>
+
+{% if result %}
+    {% if result.get('error') %}
+        <p>{{ result.error }}</p>
+    {% else %}
+        <p>Your GL Points: <strong>{{ gl_points }}</strong></p>
+        {% if dots %}
+            <p>Your DOTS Score: <strong>{{ dots }}</strong></p>
+        {% else %}
+            <p>Your DOTS Score: <strong>—</strong></p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+</div>
+
+<footer>
+    <p>
+        Please defer to 
+        <a href="https://www.powerlifting.sport/fileadmin/ipf/data/ipf-formula/Models_Evaluation-I-2020_01.pdf" target="_blank">
+            https://www.powerlifting.sport/fileadmin/ipf/data/ipf-formula/Models_Evaluation-I-2020_01.pdf
+        </a>
+        for both the GL Points and Dots formulas.
+    </p>
+</footer>
+
+<footer>
+    <strong>&#169; 2025 @jagdeep.pl All rights reserved.</strong>
+</footer>
+</body>
+</html>
