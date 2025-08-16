@@ -300,34 +300,86 @@ def gl_points():
         bodyweight_unit=bodyweight_unit
     )
 
-# Route for the 1RM calculator page
 @app.route("/1rm_calculator", methods=["GET", "POST"])
 def one_rm_calculator():
     result = None
-    if request.method == "POST":
-        try:
-            weight = float(request.form["weight"])
-            reps = int(request.form["reps"])
-            formula = request.form["formula"]
-            weight_unit = request.form["weight_unit"]  # Retrieve the selected unit from the form
+    rpe_table = []
+    rpe_input = {"user_1rm": "", "user_bw": "", "bw_unit": "kg"}  # default values
 
-            # Calculate 1RM based on the selected formula
-            if formula == "Brzycki":
-                one_rm = brzycki_1rm(weight, reps)
-            elif formula == "Epley":
-                one_rm = epley_1rm(weight, reps)
-            
+    # RPE-Reps multipliers
+    rpe_reps_map = {
+        10:  [1, 0.955, 0.922, 0.892, 0.863, 0.837, 0.811, 0.786, 0.762, 0.739, 0.707, 0.68],
+        9.5: [0.978, 0.939, 0.907, 0.878, 0.85, 0.824, 0.799, 0.774, 0.751, 0.723, 0.694, 0.667],
+        9:   [0.955, 0.922, 0.892, 0.863, 0.837, 0.811, 0.786, 0.762, 0.739, 0.707, 0.68, 0.653],
+        8.5: [0.939, 0.907, 0.878, 0.85, 0.824, 0.799, 0.774, 0.751, 0.723, 0.694, 0.667, 0.64],
+        8:   [0.922, 0.892, 0.863, 0.837, 0.811, 0.786, 0.762, 0.739, 0.707, 0.68, 0.653, 0.626],
+        7.5: [0.907, 0.878, 0.85, 0.824, 0.799, 0.774, 0.751, 0.723, 0.694, 0.667, 0.64, 0.613],
+        7:   [0.892, 0.863, 0.837, 0.811, 0.786, 0.762, 0.739, 0.707, 0.68, 0.653, 0.626, 0.599],
+        6.5: [0.878, 0.85, 0.824, 0.799, 0.774, 0.751, 0.723, 0.694, 0.667, 0.64, 0.613, 0.586]
+    }
+
+    # Get all inputs
+    weight = request.form.get("weight")
+    reps = request.form.get("reps")
+    weight_unit = request.form.get("weight_unit")
+    user_1rm = request.form.get("user_1rm")
+    user_bw = request.form.get("user_bw")
+    bw_unit = request.form.get("bw_unit")
+
+    # Calculate 1RM if weight and reps exist
+    if weight and reps:
+        try:
+            weight = float(weight)
+            reps = int(reps)
+            brzycki_rm = brzycki_1rm(weight, reps)
+            epley_rm = epley_1rm(weight, reps)
             result = {
                 "weight": weight,
                 "reps": reps,
-                "formula": formula,
-                "one_rm": round(one_rm, 2),
-                "weight_unit": weight_unit  # Include weight_unit in the result dictionary
+                "one_rm_brzycki": round(brzycki_rm, 2),
+                "one_rm_epley": round(epley_rm, 2),
+                "weight_unit": weight_unit
             }
         except Exception as e:
             result = {"error": f"An error occurred: {str(e)}"}
-    
-    return render_template("1rm_calculator.html", result=result)
+
+    # Calculate RPE table if user_1rm and user_bw exist
+    if user_1rm and user_bw and bw_unit:
+        try:
+            user_1rm = float(user_1rm)
+            user_bw = float(user_bw)
+            rpe_input = {"user_1rm": user_1rm, "user_bw": user_bw, "bw_unit": bw_unit}
+
+            # Convert to kg for calculation
+            if bw_unit == "lbs":
+                user_1rm_kg = user_1rm * 0.45359237
+                user_bw_kg = user_bw * 0.45359237
+            else:
+                user_1rm_kg = user_1rm
+                user_bw_kg = user_bw
+
+            # Fill table
+            for rpe, multipliers in rpe_reps_map.items():
+                row = {"rpe": rpe, "values": []}
+                for a in multipliers:
+                    load_kg = ((user_1rm_kg + user_bw_kg) * a) - user_bw_kg
+                    load = load_kg if bw_unit == "kg" else load_kg / 0.45359237
+                    row["values"].append(round(load, 2))
+                rpe_table.append(row)
+        except Exception as e:
+            rpe_table = [{"error": f"An error occurred: {str(e)}"}]
+    else:
+        # Empty table
+        for rpe, multipliers in rpe_reps_map.items():
+            row = {"rpe": rpe, "values": [""] * len(multipliers)}
+            rpe_table.append(row)
+
+    return render_template(
+        "1rm_calculator.html",
+        result=result,
+        rpe_table=rpe_table,
+        rpe_input=rpe_input
+    )
 	
 # Function to convert kg to lbs
 def kg_to_lbs(kg):
