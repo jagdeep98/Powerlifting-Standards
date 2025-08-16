@@ -5,49 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tables</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        /* Center the whole form under the H1, but keep labels left-aligned */
-        .form-frame {
-            max-width: 780px;   /* same idea as your other tab's container width */
-            margin: 0 auto;     /* centers the form block under the title */
-        }
-
-        .form-group { margin-bottom: 18px; }
-
-        /* Label pinned left */
-        .form-group label {
-            display: block;
-            text-align: left;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        /* Wrap each control in a fixed-width block that we center */
-        .control-wrap {
-            width: 260px;       /* tweak this if you want wider/narrower controls */
-            margin: 0 auto;     /* this centers the box itself under the title */
-        }
-
-        /* Make sure the control fills its centered wrapper and its border looks complete */
-        .control-wrap .select-unit,
-        .control-wrap .input-box {
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 8px 12px;
-
-            /* Ensure a full visible outline even if global styles differ */
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: #fff;
-        }
-
-        /* Center the submit button too */
-        button {
-            display: block;
-            margin: 20px auto 0;
-        }
-    </style>
 </head>
 <body>
 
@@ -56,64 +13,57 @@
 <div class="container">
     <h1>Tables</h1>
 
-    <form method="POST" class="form-frame">
+    <form method="POST">
         <!-- Division -->
         <div class="form-group">
             <label for="division">Age:</label>
-            <div class="control-wrap">
-                <select name="division" id="division" class="select-unit">
-                    <option value="Overall" {% if result and result.division == 'Overall' %}selected{% endif %}>Any</option>
-                    <option value="SJ" {% if result and result.division == 'SJ' %}selected{% endif %}>Sub-Junior (14-18 Years Old)</option>
-                    <option value="J" {% if result and result.division == 'J' %}selected{% endif %}>Junior (19-23 Years Old)</option>
-                    <option value="O" {% if result and result.division == 'O' %}selected{% endif %}>Open (24-39 Years Old)</option>
-                    <option value="M1" {% if result and result.division == 'M1' %}selected{% endif %}>Master I (40-49 Years Old)</option>
-                    <option value="M2" {% if result and result.division == 'M2' %}selected{% endif %}>Master II (49-59 Years Old)</option>
-                    <option value="M3" {% if result and result.division == 'M3' %}selected{% endif %}>Master III (60-69 Years Old)</option>
-                    <option value="M4" {% if result and result.division == 'M4' %}selected{% endif %}>Master IV (70+ Years Old)</option>
-                </select>
-            </div>
+            <select name="division" id="division" class="input-box">
+                <option value="Overall" {% if result and result.division == 'Overall' %}selected{% endif %}>Any</option>
+                <option value="SJ" {% if result and result.division == 'SJ' %}selected{% endif %}>Sub-Junior (14-18 Years Old)</option>
+                <option value="J" {% if result and result.division == 'J' %}selected{% endif %}>Junior (19-23 Years Old)</option>
+                <option value="O" {% if result and result.division == 'O' %}selected{% endif %}>Open (24-39 Years Old)</option>
+                <option value="M1" {% if result and result.division == 'M1' %}selected{% endif %}>Master I (40-49 Years Old)</option>
+                <option value="M2" {% if result and result.division == 'M2' %}selected{% endif %}>Master II (49-59 Years Old)</option>
+                <option value="M3" {% if result and result.division == 'M3' %}selected{% endif %}>Master III (60-69 Years Old)</option>
+                <option value="M4" {% if result and result.division == 'M4' %}selected{% endif %}>Master IV (70+ Years Old)</option>
+            </select>
         </div>
 
         <!-- Lift Type -->
         <div class="form-group">
             <label for="lift_type">Lift Type:</label>
-            <div class="control-wrap">
-                <select name="lift_type" id="lift_type" class="select-unit">
-                    <option value="Squat" {% if result and result.lift_type == 'Squat' %}selected{% endif %}>Squat</option>
-                    <option value="Bench" {% if result and result.lift_type == 'Bench Press' %}selected{% endif %}>Bench Press</option>
-                    <option value="Deadlift" {% if result and result.lift_type == 'Deadlift' %}selected{% endif %}>Deadlift</option>
-                    <option value="Total" {% if result and result.lift_type == 'Total' %}selected{% endif %}>Total</option>
-                </select>
-            </div>
+            <select name="lift_type" id="lift_type" class="input-box">
+                <option value="Squat" {% if result and result.lift_type == 'Squat' %}selected{% endif %}>Squat</option>
+                <option value="Bench" {% if result and result.lift_type == 'Bench Press' %}selected{% endif %}>Bench Press</option>
+                <option value="Deadlift" {% if result and result.lift_type == 'Deadlift' %}selected{% endif %}>Deadlift</option>
+                <option value="Total" {% if result and result.lift_type == 'Total' %}selected{% endif %}>Total</option>
+            </select>
         </div>
 
         <!-- Sex -->
         <div class="form-group">
             <label for="Sex">Sex:</label>
-            <div class="control-wrap">
-                <select name="Sex" id="Sex" class="select-unit">
-                    <option value="M" {% if result and result.Sex == 'M' %}selected{% endif %}>Male</option>
-                    <option value="F" {% if result and result.Sex == 'F' %}selected{% endif %}>Female</option>
-                </select>
-            </div>
+            <select name="Sex" id="Sex" class="input-box">
+                <option value="M" {% if result and result.Sex == 'M' %}selected{% endif %}>Male</option>
+                <option value="F" {% if result and result.Sex == 'F' %}selected{% endif %}>Female</option>
+            </select>
         </div>
 
         <!-- Weight Unit -->
         <div class="form-group">
             <label for="weight_unit">Weight Unit:</label>
-            <div class="control-wrap">
-                <select name="weight_unit" id="weight_unit" class="select-unit">
-                    <option value="kg" {% if result and result.weight_unit == 'kg' %}selected{% endif %}>kg</option>
-                    <option value="lbs" {% if result and result.weight_unit == 'lbs' %}selected{% endif %}>lbs</option>
-                </select>
-            </div>
+            <select name="weight_unit" id="weight_unit" class="input-box">
+                <option value="kg" {% if result and result.weight_unit == 'kg' %}selected{% endif %}>kg</option>
+                <option value="lbs" {% if result and result.weight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+            </select>
         </div>
 
+        <!-- Button -->
         <button type="submit">Show Standards</button>
     </form>
 
     {% if result_table %}
-    <div class="container" style="margin-top: 50px;">
+    <div style="margin-top: 50px;">
         <table>
             {{ result_table | safe }}
         </table>
